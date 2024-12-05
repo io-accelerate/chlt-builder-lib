@@ -1,0 +1,116 @@
+plugins {
+    // Ref here: https://docs.gradle.org/7.4.1/userguide/publishing_setup.html
+    id 'java-library'
+    id 'signing'
+    id 'maven-publish'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+group = 'io.accelerate'
+version = project.version.toString()
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Challenge definition
+    implementation 'io.accelerate:chlt-schema-lib:0.1.4'
+
+    //TODO remove the need for this dependency
+    implementation 'com.google.guava:guava:33.3.1-jre'
+
+    //TODO Check if this is still needed
+    implementation platform('com.fasterxml.jackson:jackson-bom:2.17.3')
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+
+    //TODO Check if this is still needed
+    implementation 'com.github.erosb:json-sKema:0.19.0'
+
+    // Testing framework
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Assertions
+    testImplementation 'org.hamcrest:hamcrest-library:2.2'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+// Suppress Javadoc warnings
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+// Refs:
+// https://stackoverflow.com/a/68505768
+publishing {
+    publications {
+        release(MavenPublication) {
+            from components.java
+            pom {
+                name = 'Java client for TDL system'
+                description = 'A Java client that allows users to get up to speed with the TDL system.'
+                url = 'https://github.com/io-accelerate/chlt-builder-lib'
+                licenses {
+                    license {
+                        name = 'Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Iulian (Julian) Ghionoiu'
+                        email = 'iulian.ghionoiu@gmail.com'
+                        organization = 'Accelerate Systems'
+                        organizationUrl = 'https://github.com/io-accelerate'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:io-accelerate/chlt-builder-lib.git'
+                    developerConnection = 'scm:git:git@github.com:io-accelerate/chlt-builder-lib.git'
+                    url = 'git@github.com:io-accelerate/chlt-builder-lib.git'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            // TODO Sort out the deployment to Maven Central
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            // TODO The Central uses API keys as opposed to creds
+            credentials {
+                username = project.findProperty('mavenCentralUsername')
+                password = project.findProperty('mavenCentralPassword')
+            }
+        }
+    }
+}
+
+// Signs using gpg-agent
+// Key name configured under "~/.gradle/gradle.properties"
+//
+// Refs:
+// https://docs.gradle.org/7.4.1/userguide/signing_plugin.html#sec:using_gpg_agent
+signing {
+    useGpgCmd()
+    sign publishing.publications.release
+}
