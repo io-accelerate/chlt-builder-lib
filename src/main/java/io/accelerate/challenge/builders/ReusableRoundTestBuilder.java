@@ -1,7 +1,8 @@
 package io.accelerate.challenge.builders;
 
-import com.google.common.collect.ImmutableList;
 import io.accelerate.challenge.definition.schema.*;
+
+import java.util.Arrays;
 
 /**
  * Created by julianghionoiu on 29/07/2015.
@@ -28,7 +29,7 @@ public class ReusableRoundTestBuilder {
     public RoundTest eq(Object expectedResult) {
         String id = idGenerator.next();
 
-        MethodCall methodCall = new MethodCall(methodDefinition.name(), ImmutableList.copyOf(params));
+        MethodCall methodCall = new MethodCall(methodDefinition.name(), Arrays.asList(params));
         return new RoundTest(id, methodCall, new RoundTestAssertion(RoundTestAssertionType.EQUALS, expectedResult));
     }
 }
