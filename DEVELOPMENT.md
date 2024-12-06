@@ -14,7 +14,7 @@ Check Maven Local contains release version:
 ```
 CURRENT_VERSION=$(cat gradle.properties | grep version | cut -d "=" -f2)
 
-ls -l $HOME/.m2/repository/io/accelerate/chlt-schema-lib/${CURRENT_VERSION}
+ls -l $HOME/.m2/repository/io/accelerate/chlt-builder-lib/${CURRENT_VERSION}
 ```
 
 
