@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class BuildAndCheckChallengeE2eTest {
+public class BuildAndCheckChallengeE2ETest {
 
     private ChallengeRound challengeRound1;
     private ChallengeRound challengeRound2;
@@ -26,11 +26,7 @@ public class BuildAndCheckChallengeE2eTest {
 
         challengeRound1 = round1(someTestMethod, "CNC_R1");
 
-        challengeRound2 = new ChallengeRound(
-                "CNC_R2",
-                "CNC Round2",
-                MethodDefinitions.of(someTestMethod),
-                List.of());
+        challengeRound2 = round2(someTestMethod, "CNC_R2");
 
         challenge = new Challenge("CNC", 1, "Test Challenge",
                 List.of(challengeRound1, challengeRound2));
