@@ -9,7 +9,6 @@ import java.util.Arrays;
  *
  * Warning ! This class is mutable and is meant to be reused.
  */
-// TODO: Move to builder toolkit and publish to Maven Central
 public class ReusableRoundTestBuilder {
     private final MethodDefinition methodDefinition;
     private final IdGenerator idGenerator;

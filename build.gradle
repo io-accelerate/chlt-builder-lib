@@ -18,17 +18,13 @@ repositories {
 }
 
 dependencies {
-    // Challenge definition
-    implementation 'io.accelerate:chlt-schema-lib:0.1.4'
-
-    //TODO Check if this is still needed
+    // JSON serialisation and deserialization is simulated by the client. Use the BOM to set the version of all the transitive dependencies.
     implementation platform('com.fasterxml.jackson:jackson-bom:2.17.3')
     implementation 'com.fasterxml.jackson.core:jackson-core'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
 
-    //TODO Check if this is still needed
-    implementation 'com.github.erosb:json-sKema:0.19.0'
+    // Challenge definition
+    implementation 'io.accelerate:chlt-schema-lib:0.1.4' // This references com.fasterxml.jackson.core as well
 
     // Testing framework
     testImplementation platform('org.junit:junit-bom:5.10.0')
@@ -91,9 +87,7 @@ publishing {
     }
     repositories {
         maven {
-            // TODO Sort out the deployment to Maven Central
             url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            // TODO The Central uses API keys as opposed to creds
             credentials {
                 username = project.findProperty('mavenCentralUsername')
                 password = project.findProperty('mavenCentralPassword')
