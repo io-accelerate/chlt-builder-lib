@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static io.accelerate.challenge.definition.schema.RoundTestAssertionType.EQUALS;
+
 public class BuildAndCheckChallengeE2ETest {
 
     private ChallengeRound challengeRound1;
@@ -56,7 +58,7 @@ public class BuildAndCheckChallengeE2ETest {
                 roundId,
                 "Concat Round1",
                 MethodDefinitions.of(someTestMethod),
-                List.of(reusableRoundTestBuilder.call("a", "b").eq("ab")));
+                List.of(reusableRoundTestBuilder.call("a", "b").expect(EQUALS, "ab")));
     }
 
     private static ChallengeRound round2(MethodDefinition someTestMethod, String roundId) {
@@ -68,7 +70,7 @@ public class BuildAndCheckChallengeE2ETest {
                 roundId,
                 "Concat Round2",
                 MethodDefinitions.of(someTestMethod),
-                List.of(reusableRoundTestBuilder.call("abc", "123").eq("abc123")));
+                List.of(reusableRoundTestBuilder.call("abc", "123").expect(EQUALS, "abc123")));
     }
 
 

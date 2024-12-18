@@ -25,10 +25,10 @@ public class ReusableRoundTestBuilder {
         return this;
     }
 
-    public RoundTest eq(Object expectedResult) {
+    public RoundTest expect(RoundTestAssertionType type, Object value) {
         String id = idGenerator.next();
 
         MethodCall methodCall = new MethodCall(methodDefinition.name(), Arrays.asList(params));
-        return new RoundTest(id, methodCall, new RoundTestAssertion(RoundTestAssertionType.EQUALS, expectedResult));
+        return new RoundTest(id, methodCall, new RoundTestAssertion(type, value));
     }
 }

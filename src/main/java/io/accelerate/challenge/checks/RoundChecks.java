@@ -110,6 +110,13 @@ public final class RoundChecks {
                         assertionPassed = ((String) result).contains((String)roundTestAssertion.value());
                     }
                 }
+                case CONTAINS_STRING_IGNORING_CASE -> {
+                    if (result instanceof String) {
+                        String sourceResultToLower = ((String) result).toLowerCase();
+                        String expectedContainsToLower = ((String) roundTestAssertion.value()).toLowerCase();
+                        assertionPassed = sourceResultToLower.contains(expectedContainsToLower);
+                    }
+                }
             }
 
             if (!assertionPassed){
