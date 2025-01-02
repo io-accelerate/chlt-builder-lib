@@ -1,16 +1,19 @@
-package io.accelerate.challenge.checks;
+package io.accelerate.challenge.checks.solve;
 
+import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ArrayOfIntegers;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
+import io.accelerate.challenge.definition.schema.types.ListType;
+import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RoundSolveWithArrayOfIntCheckTest {
+class ArrayOfIntSolveTest {
 
     @Test
     void shouldPassIfRoundCanBeSolved() {
@@ -37,7 +40,9 @@ class RoundSolveWithArrayOfIntCheckTest {
 
     private static ChallengeRound mergeChallenge(List<?> args, Object expectedValue) {
         MethodDefinition methodDefinition = new MethodDefinition("merge",
-                List.of(ArrayOfIntegers.class, ArrayOfIntegers.class), ArrayOfIntegers.class);
+                List.of(new ParamDefinition("desc1", new ListType(PrimitiveTypes.INTEGER)),
+                        new ParamDefinition("desc2", new ListType(PrimitiveTypes.INTEGER))), 
+                new ReturnDefinition("desc3", new ListType(PrimitiveTypes.INTEGER)));
         return new ChallengeRound("MRG", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("MRG_R1_01",

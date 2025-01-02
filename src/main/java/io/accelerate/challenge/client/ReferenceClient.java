@@ -19,6 +19,7 @@ public class ReferenceClient {
         ImplementationMap implementations = referenceSolution.participantUpdatesImplementationMap();
         UserImplementation userImplementation = implementations.getImplementationFor(methodName);
         Object actualReturnedValue = userImplementation.process(serializedParams);
+
         return new Response(requestId, actualReturnedValue);
     }
 

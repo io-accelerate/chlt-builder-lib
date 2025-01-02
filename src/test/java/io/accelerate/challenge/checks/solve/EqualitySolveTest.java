@@ -1,15 +1,17 @@
-package io.accelerate.challenge.checks;
+package io.accelerate.challenge.checks.solve;
 
+import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
+import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RoundSolveWithEqualityCheckTest {
+class EqualitySolveTest {
 
     @Test
     void shouldPassIfRoundCanBeSolved() {
@@ -32,7 +34,9 @@ class RoundSolveWithEqualityCheckTest {
 
     private static ChallengeRound sumChallenge(List<?> args, Object expectedValue) {
         MethodDefinition methodDefinition = new MethodDefinition("sum",
-                List.of(Integer.class, Integer.class), Integer.class);
+                List.of(new ParamDefinition("desc1", PrimitiveTypes.INTEGER), 
+                        new ParamDefinition("desc2", PrimitiveTypes.INTEGER)), 
+                new ReturnDefinition("desc3", PrimitiveTypes.INTEGER));
         return new ChallengeRound("SUM", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("SUM_R1_01",

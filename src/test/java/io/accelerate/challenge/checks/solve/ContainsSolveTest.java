@@ -1,15 +1,17 @@
-package io.accelerate.challenge.checks;
+package io.accelerate.challenge.checks.solve;
 
+import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
+import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RoundSolveWithContainsCheckTest {
+class ContainsSolveTest {
 
     @Test
     void shouldPassIfRoundCanBeSolved() {
@@ -32,7 +34,7 @@ class RoundSolveWithContainsCheckTest {
 
     private static ChallengeRound letterToSantaChallenge(List<?> args, Object expectedValue) {
         MethodDefinition methodDefinition = new MethodDefinition("letter_to_santa",
-                List.of(), String.class);
+                List.of(), new ReturnDefinition("desc3", PrimitiveTypes.STRING));
         return new ChallengeRound("SNT", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("SNT_R1_01",

@@ -1,10 +1,14 @@
 package io.accelerate.challenge.checks;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.accelerate.challenge.client.ReferenceClient;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.client.Request;
 import io.accelerate.challenge.client.Response;
 import io.accelerate.challenge.definition.schema.*;
+import io.accelerate.challenge.definition.schema.types.ListType;
+import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +32,25 @@ public final class RoundChecks {
 
             //Expected
             MethodDefinition methodDefinition = methods.getByName(methodCall.methodName());
-            List<Class<?>> expectedParameterTypes = methodDefinition.parameterTypes();
+            List<ParamDefinition> paramDefinitions = methodDefinition.parameterDefinitions();
 
             //Actual
             List<?> params = methodCall.args();
-            List<Class<?>> paramsTypes = new ArrayList<>();
-            for (Object param : params) {
-                paramsTypes.add(param.getClass());
+            
+            //Check equal num of params
+            if (params.size() != paramDefinitions.size()) {
+                throw new AssertionError("Request " + id + " does not have the same number of parameters as the method definition");
             }
 
-            if (!paramsTypes.equals(expectedParameterTypes)) {
-                throw new AssertionError("Request " + id + " should have consistent param types");
+            for (int i = 0; i < paramDefinitions.size(); i++) {
+                TypeDefinition typeDefinition = paramDefinitions.get(i).typeDefinition();
+                Object paramValue = params.get(i);
+                JsonNode paramJsonNode = asJsonNode(paramValue);
+
+                if (!typeDefinition.isCompatible(paramJsonNode)) {
+                    throw new AssertionError("Request " + id + " should have consistent param types: "+"Cannot cast " + paramValue +
+                            " to " + typeDefinition.getDisplayName());
+                }
             }
         });
     }
@@ -51,21 +63,17 @@ public final class RoundChecks {
 
             //Expected
             MethodDefinition methodDefinition = methods.getByName(methodName);
-            Class<?> expectedReturnType = methodDefinition.returnType();
+            ReturnDefinition returnDefinition = methodDefinition.returnDefinition();
 
             //Actual
             String id = roundTest.id();
             RoundTestAssertion roundTestAssertion = roundTest.roundTestAssertion();
-
-            Object assertionValue = roundTestAssertion.value();
+            JsonNode assertionValueJsonNode = asJsonNode(roundTestAssertion.value());
 
             // Check if the assertion value is an instance of the expected return type
-            if (expectedReturnType.isInstance(assertionValue)) {
-                expectedReturnType.cast(assertionValue);
-            } else 
-            if (assertionValue != null) {
-                throw new AssertionError("Response " + id + " should have consistent return type: Cannot cast " + assertionValue.getClass().getName() +
-                        " to " + expectedReturnType.getName());
+            if (!returnDefinition.typeDefinition().isCompatible(assertionValueJsonNode)) {
+                throw new AssertionError("Response " + id + " should have consistent return type: Cannot cast " + roundTestAssertion.value() +
+                        " to " + returnDefinition.typeDefinition().getDisplayName());
             }
         }
     }
@@ -75,7 +83,6 @@ public final class RoundChecks {
     public static void assertRoundCanBeSolvedWith(ReferenceSolution referenceSolution, ChallengeRound challengeRound) {
         ReferenceClient referenceClient = new ReferenceClient();
         List<RoundTest> roundTests = challengeRound.getTests();
-        MethodDefinitions methodDefinitions = challengeRound.getMethods();
 
         //Debt: We should provide an execution report
         boolean allTrialsPassed = true;
@@ -92,32 +99,26 @@ public final class RoundChecks {
             MethodCall methodCall = roundTest.methodCall();
             Request request = new Request(roundTest.id(), methodCall);
             Response response = referenceClient.respondToRequest(request, referenceSolution);
-            Object result = response.result();
 
             RoundTestAssertion roundTestAssertion = roundTest.roundTestAssertion();
             String auditTrial = formatAuditLine(request, roundTestAssertion, response);
 
             boolean assertionPassed = false;
+            // Compare as jsonNodes
+            JsonNode responseJsonNode = asJsonNode(response.value());
             switch (roundTestAssertion.type()) {
                 case EQUALS -> {
-                    Class<?> expectedReturnType = methodDefinitions.getByName(methodCall.methodName()).returnType();
-                    Object castedValue = null;
-                    if (expectedReturnType.isInstance(result)) {
-                        castedValue = expectedReturnType.cast(result);
-                    }
-                    assertionPassed = Objects.equals(roundTestAssertion.value(), castedValue);
+                    assertionPassed = Objects.equals(asJsonNode(roundTestAssertion.value()), responseJsonNode);
                 }
                 case CONTAINS_STRING -> {
-                    if (result instanceof String) {
-                        assertionPassed = ((String) result).contains((String)roundTestAssertion.value());
-                    }
+                    assertionPassed = responseJsonNode.asText().contains((String)roundTestAssertion.value());
                 }
                 case CONTAINS_STRING_IGNORING_CASE -> {
-                    if (result instanceof String) {
-                        String sourceResultToLower = ((String) result).toLowerCase();
-                        String expectedContainsToLower = ((String) roundTestAssertion.value()).toLowerCase();
-                        assertionPassed = sourceResultToLower.contains(expectedContainsToLower);
-                    }
+                    String expectedContainsToLower = ((String) roundTestAssertion.value()).toLowerCase();
+                    assertionPassed = responseJsonNode.asText().toLowerCase().contains(expectedContainsToLower);
+                }
+                case IS_NULL -> {
+                    assertionPassed = responseJsonNode.isNull() == ((Boolean) roundTestAssertion.value());
                 }
             }
 
@@ -134,6 +135,11 @@ public final class RoundChecks {
             failedLines.forEach(System.out::println);
             throw new AssertionError("The implementation has failed one or more trials. Please check above.");
         }
+    }
+
+    private static JsonNode asJsonNode(Object value) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.valueToTree(value);
     }
 
     private static String formatAuditLine(Request request, RoundTestAssertion roundTestAssertion, Response response) {
@@ -155,6 +161,6 @@ public final class RoundChecks {
         String paramsString = sb.toString();
 
         return String.format("%s(%s), expected: %s %s, got: %s",
-                methodCall.methodName(), paramsString, roundTestAssertion.type().toPrintableName(), roundTestAssertion.value(), response.result());
+                methodCall.methodName(), paramsString, roundTestAssertion.type().toDisplayName(), roundTestAssertion.value(), response.value());
     }
 }

@@ -1,15 +1,17 @@
-package io.accelerate.challenge.checks;
+package io.accelerate.challenge.checks.solve;
 
+import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
+import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RoundSolveNoMethodCheckTest {
+class NoMethodSolveTest {
 
     @Test
     void shouldPassIfRoundCanBeSolved() {
@@ -41,7 +43,7 @@ class RoundSolveNoMethodCheckTest {
 
     private static ChallengeRound pingChallenge(List<?> args, Object expectedValue) {
         MethodDefinition methodDefinition = new MethodDefinition("ping",
-                List.of(), String.class);
+                List.of(), new ReturnDefinition("desc1", PrimitiveTypes.STRING));
         return new ChallengeRound("PNG", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("PNG_R1_01",

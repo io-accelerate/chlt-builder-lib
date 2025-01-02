@@ -1,16 +1,17 @@
-package io.accelerate.challenge.checks;
+package io.accelerate.challenge.checks.solve;
 
-import io.accelerate.challenge.client.ArrayOfIntegers;
+import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
+import io.accelerate.challenge.definition.schema.types.ObjectType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RoundSolveWithObjectCheckTest {
+class ObjectSolveTest {
 
     record Item(int id, String name) { }
     
@@ -37,7 +38,8 @@ class RoundSolveWithObjectCheckTest {
 
     private static ChallengeRound objectStoreAndRetrieve(List<?> args, Object expectedValue) {
         MethodDefinition methodDefinition = new MethodDefinition("fetch",
-                List.of(Item.class), Item.class);
+                List.of(new ParamDefinition("desc1", ObjectType.from(Item.class))), 
+                new ReturnDefinition("desc2", ObjectType.from(Item.class)));
         return new ChallengeRound("FETCH", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("FTC_R1_01",

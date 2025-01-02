@@ -1,6 +1,7 @@
 package io.accelerate.challenge.builders;
 
 import io.accelerate.challenge.definition.schema.*;
+import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,7 +11,9 @@ import static org.hamcrest.Matchers.equalTo;
 
 class ReusableRoundTestBuilderTest {
     public static final MethodDefinition SOME_METHOD = new MethodDefinition("some_method", 
-            List.of(String.class, String.class), String.class);
+            List.of(new ParamDefinition("desc1", PrimitiveTypes.STRING), 
+                    new ParamDefinition("desc2", PrimitiveTypes.STRING)), 
+            new ReturnDefinition("desc3", PrimitiveTypes.STRING));
     public static final String SOME_ID = "someID";
     public static final String SOME_ARG = "someArg";
     public static final String SOME_OTHER_ARG = "someOtherArg";

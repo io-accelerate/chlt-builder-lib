@@ -1,13 +1,15 @@
-package io.accelerate.challenge.checks;
+package io.accelerate.challenge.checks.defined;
 
+import io.accelerate.challenge.checks.ChallengeChecks;
 import io.accelerate.challenge.definition.schema.*;
+import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ChallengeWellDefinedChecksTest {
+class ChallengeIdDefTest {
 
     @Test
     void shouldPassIfChallengeWellDefined() {
@@ -29,12 +31,13 @@ class ChallengeWellDefinedChecksTest {
 
     private static Challenge challengeWithTestIds(List<String> testIds) {
 
-        List<RoundTest> tests = testIds.stream().map(ChallengeWellDefinedChecksTest::someRoundTest).toList();
+        List<RoundTest> tests = testIds.stream().map(ChallengeIdDefTest::someRoundTest).toList();
 
         MethodDefinition methodDefinition = new MethodDefinition(
                 "CNC",
-                List.of(String.class, String.class),
-                String.class);
+                List.of(new ParamDefinition("desc1", PrimitiveTypes.STRING),
+                        new ParamDefinition("desc2", PrimitiveTypes.STRING)),
+                new ReturnDefinition("desc3", PrimitiveTypes.STRING));
         ChallengeRound round = new ChallengeRound("R", "desc",
                 MethodDefinitions.of(methodDefinition),
                 tests);
