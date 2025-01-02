@@ -8,6 +8,7 @@ import io.accelerate.challenge.definition.schema.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class RoundChecks {
 
@@ -103,7 +104,7 @@ public final class RoundChecks {
                     if (expectedReturnType.isInstance(result)) {
                         castedValue = expectedReturnType.cast(result);
                     }
-                    assertionPassed = roundTestAssertion.value().equals(castedValue);
+                    assertionPassed = Objects.equals(roundTestAssertion.value(), castedValue);
                 }
                 case CONTAINS_STRING -> {
                     if (result instanceof String) {

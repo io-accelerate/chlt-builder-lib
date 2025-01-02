@@ -1,6 +1,8 @@
 package io.accelerate.challenge.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ParamAccessor {
     private final JsonNode jsonNode;
@@ -31,5 +33,14 @@ public class ParamAccessor {
             }
         }
         return arrayOfIntegers;
+    }
+
+    public <T> T getAsObject(Class<T> itemClass) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.treeToValue(jsonNode, itemClass);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to deserialize jsonNode to " + itemClass.getName(), e);
+        }
     }
 }
