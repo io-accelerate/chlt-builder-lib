@@ -62,7 +62,8 @@ public final class RoundChecks {
             // Check if the assertion value is an instance of the expected return type
             if (expectedReturnType.isInstance(assertionValue)) {
                 expectedReturnType.cast(assertionValue);
-            } else {
+            } else 
+            if (assertionValue != null) {
                 throw new AssertionError("Response " + id + " should have consistent return type: Cannot cast " + assertionValue.getClass().getName() +
                         " to " + expectedReturnType.getName());
             }

@@ -19,6 +19,15 @@ class RoundWellDefinedChecksTest {
     }
 
     @Test
+    void shouldPassIfRoundWellDefinedWithNullReturn() {
+        ChallengeRound challengeRound = getChallengeRound(
+                List.of(String.class, String.class), String.class,
+                List.of("a", "b"), null);
+
+        RoundChecks.assertRoundIsWellDefined(challengeRound);
+    }
+
+    @Test
     void shouldErrorIfParamsNotConsistentWithMethodDefinition() {
         ChallengeRound challengeRound = getChallengeRound(
                 List.of(String.class, String.class), String.class,
