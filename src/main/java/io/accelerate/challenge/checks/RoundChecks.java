@@ -7,7 +7,6 @@ import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.client.Request;
 import io.accelerate.challenge.client.Response;
 import io.accelerate.challenge.definition.schema.*;
-import io.accelerate.challenge.definition.schema.types.ListType;
 import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 
 import java.util.ArrayList;
@@ -117,19 +116,13 @@ public final class RoundChecks {
             // Compare as jsonNodes
             JsonNode responseJsonNode = asJsonNode(response.value());
             switch (roundTestAssertion.type()) {
-                case EQUALS -> {
-                    assertionPassed = Objects.equals(asJsonNode(roundTestAssertion.value()), responseJsonNode);
-                }
-                case CONTAINS_STRING -> {
-                    assertionPassed = responseJsonNode.asText().contains((String)roundTestAssertion.value());
-                }
+                case EQUALS -> assertionPassed = Objects.equals(asJsonNode(roundTestAssertion.value()), responseJsonNode);
+                case CONTAINS_STRING -> assertionPassed = responseJsonNode.asText().contains((String)roundTestAssertion.value());
                 case CONTAINS_STRING_IGNORING_CASE -> {
                     String expectedContainsToLower = ((String) roundTestAssertion.value()).toLowerCase();
                     assertionPassed = responseJsonNode.asText().toLowerCase().contains(expectedContainsToLower);
                 }
-                case IS_NULL -> {
-                    assertionPassed = responseJsonNode.isNull() == ((Boolean) roundTestAssertion.value());
-                }
+                case IS_NULL -> assertionPassed = responseJsonNode.isNull() == ((Boolean) roundTestAssertion.value());
             }
 
             if (!assertionPassed){

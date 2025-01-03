@@ -20,11 +20,9 @@ class ChallengeIdDefTest {
 
     @Test
     void shouldErrorIfDuplicateIds() {
-        assertThrows(AssertionError.class, () -> {
-            ChallengeChecks.assertChallengeIsWellDefined(
-                    challengeWithTestIds(List.of("CNC_R1_01", "CNC_R1_02", "CNC_R1_01"))
-            );
-        });
+        assertThrows(AssertionError.class, () -> ChallengeChecks.assertChallengeIsWellDefined(
+                challengeWithTestIds(List.of("CNC_R1_01", "CNC_R1_02", "CNC_R1_01"))
+        ));
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -24,9 +24,7 @@ class EqualitySolveTest {
     void shouldErrorRoundDoesNotSolveCorrectly() {
         ChallengeRound challengeRound = sumChallenge(List.of(1, 2), 99);
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundCanBeSolvedWith(getSumReferenceSolution(), challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundCanBeSolvedWith(getSumReferenceSolution(), challengeRound));
     }
 
 

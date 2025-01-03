@@ -2,17 +2,14 @@ package io.accelerate.challenge.checks.defined;
 
 import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.definition.schema.*;
-import io.accelerate.challenge.definition.schema.types.ObjectType;
 import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RoundNullCheckTest {
 
+    @SuppressWarnings("unused")
     record SomeItem(String id, int value) {}
 
     @Test

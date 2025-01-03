@@ -24,9 +24,7 @@ class ContainsSolveTest {
     void shouldErrorRoundDoesNotSolveCorrectly() {
         ChallengeRound challengeRound = letterToSantaChallenge(List.of(""), "John");
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundCanBeSolvedWith(dearSantaReferenceSolution(), challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundCanBeSolvedWith(dearSantaReferenceSolution(), challengeRound));
     }
 
 

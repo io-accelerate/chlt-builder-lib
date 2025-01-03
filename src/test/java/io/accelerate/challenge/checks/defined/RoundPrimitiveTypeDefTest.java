@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RoundPrimitiveTypeDefTest {
 
@@ -30,9 +30,7 @@ class RoundPrimitiveTypeDefTest {
                 new ReturnDefinition("desc3", PrimitiveType.STRING),
                 List.of("a", "b"), null);
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundIsWellDefined(challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundIsWellDefined(challengeRound));
     }
 
     @Test
@@ -43,9 +41,7 @@ class RoundPrimitiveTypeDefTest {
                 new ReturnDefinition("desc3", PrimitiveType.STRING),
                 List.of(1, 2), "some_value");
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundIsWellDefined(challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundIsWellDefined(challengeRound));
     }
 
     @Test
@@ -56,9 +52,7 @@ class RoundPrimitiveTypeDefTest {
                 new ReturnDefinition("desc3", PrimitiveType.STRING),
                 List.of("a", "b"), 1);
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundIsWellDefined(challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundIsWellDefined(challengeRound));
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

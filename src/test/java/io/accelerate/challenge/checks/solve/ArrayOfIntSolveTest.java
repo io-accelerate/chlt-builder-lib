@@ -30,9 +30,7 @@ class ArrayOfIntSolveTest {
                 List.of(ArrayOfIntegers.of(1, 2), ArrayOfIntegers.of(3, 4)),
                 ArrayOfIntegers.of(1, 2));
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundCanBeSolvedWith(getMergeReferenceSolution(), challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundCanBeSolvedWith(getMergeReferenceSolution(), challengeRound));
     }
 
 

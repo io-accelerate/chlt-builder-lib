@@ -52,6 +52,7 @@ public class BuildAndCheckChallengeE2ETest {
         };
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static ChallengeRound round1(MethodDefinition someTestMethod, String roundId) {
         SequentialIdGenerator idGenerator = new SequentialIdGenerator(roundId);
         ReusableRoundTestBuilder reusableRoundTestBuilder =
@@ -64,6 +65,7 @@ public class BuildAndCheckChallengeE2ETest {
                 List.of(reusableRoundTestBuilder.call("a", "b").expect(EQUALS, "ab")));
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static ChallengeRound round2(MethodDefinition someTestMethod, String roundId) {
         SequentialIdGenerator idGenerator = new SequentialIdGenerator(roundId);
         ReusableRoundTestBuilder reusableRoundTestBuilder =

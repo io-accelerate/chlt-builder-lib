@@ -29,9 +29,7 @@ class RoundListTypeDefTest {
                 new ReturnDefinition("desc2", new ListType(PrimitiveType.INTEGER)),
                 List.of(List.of("1", "2", "3")), List.of(5, 6));
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundIsWellDefined(challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundIsWellDefined(challengeRound));
     }
 
     @Test
@@ -41,9 +39,7 @@ class RoundListTypeDefTest {
                 new ReturnDefinition("desc2", new ListType(PrimitiveType.INTEGER)),
                 List.of(List.of(1, 2, 3)), List.of("5", "6"));
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundIsWellDefined(challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundIsWellDefined(challengeRound));
     }
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

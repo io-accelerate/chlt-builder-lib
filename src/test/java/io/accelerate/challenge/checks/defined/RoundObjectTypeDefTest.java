@@ -2,9 +2,7 @@ package io.accelerate.challenge.checks.defined;
 
 import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.definition.schema.*;
-import io.accelerate.challenge.definition.schema.types.ListType;
 import io.accelerate.challenge.definition.schema.types.ObjectType;
-import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -33,9 +31,7 @@ class RoundObjectTypeDefTest {
                 new ReturnDefinition("desc2", ObjectType.from(SomeItem.class)),
                 List.of(Map.of("x", 1)), new SomeItem("y", 9));
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundIsWellDefined(challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundIsWellDefined(challengeRound));
     }
 
     @Test
@@ -45,9 +41,7 @@ class RoundObjectTypeDefTest {
                 new ReturnDefinition("desc2", ObjectType.from(SomeItem.class)),
                 List.of(new SomeItem("x", 3)), Map.of("x", 1));
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundIsWellDefined(challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundIsWellDefined(challengeRound));
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

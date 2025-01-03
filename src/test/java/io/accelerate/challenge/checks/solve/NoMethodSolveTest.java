@@ -24,18 +24,14 @@ class NoMethodSolveTest {
     void shouldErrorRoundDoesNotSolveCorrectly() {
         ChallengeRound challengeRound = pingChallenge(List.of(), "wrong");
 
-        assertThrows(AssertionError.class, () -> {
-            RoundChecks.assertRoundCanBeSolvedWith(getPingReferenceSolution(), challengeRound);
-        });
+        assertThrows(AssertionError.class, () -> RoundChecks.assertRoundCanBeSolvedWith(getPingReferenceSolution(), challengeRound));
     }
 
     @Test
     void shouldErrorSolutionDoesNotMapMethod() {
         ChallengeRound challengeRound = pingChallenge(List.of(), "pong");
 
-        assertThrows(NoSuchMethodError.class, () -> {
-            RoundChecks.assertRoundCanBeSolvedWith(getNullReferenceSolution(), challengeRound);
-        });
+        assertThrows(NoSuchMethodError.class, () -> RoundChecks.assertRoundCanBeSolvedWith(getNullReferenceSolution(), challengeRound));
     }
 
 
