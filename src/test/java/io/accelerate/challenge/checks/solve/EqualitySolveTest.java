@@ -4,7 +4,7 @@ import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,9 +34,9 @@ class EqualitySolveTest {
 
     private static ChallengeRound sumChallenge(List<?> args, Object expectedValue) {
         MethodDefinition methodDefinition = new MethodDefinition("sum",
-                List.of(new ParamDefinition("desc1", PrimitiveTypes.INTEGER), 
-                        new ParamDefinition("desc2", PrimitiveTypes.INTEGER)), 
-                new ReturnDefinition("desc3", PrimitiveTypes.INTEGER));
+                List.of(new ParamDefinition("desc1", PrimitiveType.INTEGER), 
+                        new ParamDefinition("desc2", PrimitiveType.INTEGER)), 
+                new ReturnDefinition("desc3", PrimitiveType.INTEGER));
         return new ChallengeRound("SUM", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("SUM_R1_01",

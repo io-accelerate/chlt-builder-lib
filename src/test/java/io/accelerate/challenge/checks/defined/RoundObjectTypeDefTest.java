@@ -4,7 +4,7 @@ import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.definition.schema.*;
 import io.accelerate.challenge.definition.schema.types.ListType;
 import io.accelerate.challenge.definition.schema.types.ObjectType;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

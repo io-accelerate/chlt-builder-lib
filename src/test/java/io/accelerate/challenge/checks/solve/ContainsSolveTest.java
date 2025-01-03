@@ -4,7 +4,7 @@ import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,7 +34,7 @@ class ContainsSolveTest {
 
     private static ChallengeRound letterToSantaChallenge(List<?> args, Object expectedValue) {
         MethodDefinition methodDefinition = new MethodDefinition("letter_to_santa",
-                List.of(), new ReturnDefinition("desc3", PrimitiveTypes.STRING));
+                List.of(), new ReturnDefinition("desc3", PrimitiveType.STRING));
         return new ChallengeRound("SNT", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("SNT_R1_01",

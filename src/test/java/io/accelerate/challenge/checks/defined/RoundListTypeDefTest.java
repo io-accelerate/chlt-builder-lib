@@ -3,7 +3,7 @@ package io.accelerate.challenge.checks.defined;
 import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.definition.schema.*;
 import io.accelerate.challenge.definition.schema.types.ListType;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,8 +15,8 @@ class RoundListTypeDefTest {
     @Test
     void shouldPassIfRoundWellDefined() {
         ChallengeRound challengeRound = getChallengeRound(
-                List.of(new ParamDefinition("desc1", new ListType(PrimitiveTypes.INTEGER))), 
-                new ReturnDefinition("desc2", new ListType(PrimitiveTypes.INTEGER)),
+                List.of(new ParamDefinition("desc1", new ListType(PrimitiveType.INTEGER))), 
+                new ReturnDefinition("desc2", new ListType(PrimitiveType.INTEGER)),
                 List.of(List.of(1, 2, 3)), List.of(5, 6));
 
         RoundChecks.assertRoundIsWellDefined(challengeRound);
@@ -25,8 +25,8 @@ class RoundListTypeDefTest {
     @Test
     void shouldErrorIfParamTypeDoesNotMatch() {
         ChallengeRound challengeRound = getChallengeRound(
-                List.of(new ParamDefinition("desc1", new ListType(PrimitiveTypes.INTEGER))),
-                new ReturnDefinition("desc2", new ListType(PrimitiveTypes.INTEGER)),
+                List.of(new ParamDefinition("desc1", new ListType(PrimitiveType.INTEGER))),
+                new ReturnDefinition("desc2", new ListType(PrimitiveType.INTEGER)),
                 List.of(List.of("1", "2", "3")), List.of(5, 6));
 
         assertThrows(AssertionError.class, () -> {
@@ -37,8 +37,8 @@ class RoundListTypeDefTest {
     @Test
     void shouldErrorIfReturnTypeDoesNotMatch() {
         ChallengeRound challengeRound = getChallengeRound(
-                List.of(new ParamDefinition("desc1", new ListType(PrimitiveTypes.INTEGER))),
-                new ReturnDefinition("desc2", new ListType(PrimitiveTypes.INTEGER)),
+                List.of(new ParamDefinition("desc1", new ListType(PrimitiveType.INTEGER))),
+                new ReturnDefinition("desc2", new ListType(PrimitiveType.INTEGER)),
                 List.of(List.of(1, 2, 3)), List.of("5", "6"));
 
         assertThrows(AssertionError.class, () -> {

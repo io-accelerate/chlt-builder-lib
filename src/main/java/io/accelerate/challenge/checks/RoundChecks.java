@@ -8,7 +8,7 @@ import io.accelerate.challenge.client.Request;
 import io.accelerate.challenge.client.Response;
 import io.accelerate.challenge.definition.schema.*;
 import io.accelerate.challenge.definition.schema.types.ListType;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,12 +68,22 @@ public final class RoundChecks {
             //Actual
             String id = roundTest.id();
             RoundTestAssertion roundTestAssertion = roundTest.roundTestAssertion();
-            JsonNode assertionValueJsonNode = asJsonNode(roundTestAssertion.value());
-
-            // Check if the assertion value is an instance of the expected return type
-            if (!returnDefinition.typeDefinition().isCompatible(assertionValueJsonNode)) {
-                throw new AssertionError("Response " + id + " should have consistent return type: Cannot cast " + roundTestAssertion.value() +
-                        " to " + returnDefinition.typeDefinition().getDisplayName());
+            TypeConstraint typeConstraints = roundTestAssertion.type().getTypeConstraint();
+            switch (typeConstraints) {
+                case MATCHING_RETURN_TYPE -> {
+                    if (!returnDefinition.typeDefinition().isCompatible(asJsonNode(roundTestAssertion.value()))) {
+                        throw new AssertionError("Response " + id + " should have consistent return type: "+"Cannot cast " + roundTestAssertion.value() +
+                                " to " + returnDefinition.typeDefinition().getDisplayName());
+                    }
+                }
+                case STRING -> {
+                    if (returnDefinition.typeDefinition() != PrimitiveType.STRING) {
+                        throw new AssertionError("Response " + id + " needs to be a string");
+                    }
+                }
+                case ANY -> {
+                    return;
+                }
             }
         }
     }

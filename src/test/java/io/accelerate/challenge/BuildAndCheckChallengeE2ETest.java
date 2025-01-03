@@ -7,7 +7,7 @@ import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,9 +25,9 @@ public class BuildAndCheckChallengeE2ETest {
     @BeforeEach
     void setUp() {
         MethodDefinition someTestMethod = new MethodDefinition("concat",
-                List.of(new ParamDefinition("desc1", PrimitiveTypes.STRING),
-                        new ParamDefinition("desc2", PrimitiveTypes.STRING)),
-                new ReturnDefinition("desc3", PrimitiveTypes.STRING));
+                List.of(new ParamDefinition("desc1", PrimitiveType.STRING),
+                        new ParamDefinition("desc2", PrimitiveType.STRING)),
+                new ReturnDefinition("desc3", PrimitiveType.STRING));
 
         challengeRound1 = round1(someTestMethod, "CNC_R1");
 

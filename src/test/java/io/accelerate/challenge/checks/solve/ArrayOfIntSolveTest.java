@@ -6,7 +6,7 @@ import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
 import io.accelerate.challenge.definition.schema.types.ListType;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -40,9 +40,9 @@ class ArrayOfIntSolveTest {
 
     private static ChallengeRound mergeChallenge(List<?> args, Object expectedValue) {
         MethodDefinition methodDefinition = new MethodDefinition("merge",
-                List.of(new ParamDefinition("desc1", new ListType(PrimitiveTypes.INTEGER)),
-                        new ParamDefinition("desc2", new ListType(PrimitiveTypes.INTEGER))), 
-                new ReturnDefinition("desc3", new ListType(PrimitiveTypes.INTEGER)));
+                List.of(new ParamDefinition("desc1", new ListType(PrimitiveType.INTEGER)),
+                        new ParamDefinition("desc2", new ListType(PrimitiveType.INTEGER))), 
+                new ReturnDefinition("desc3", new ListType(PrimitiveType.INTEGER)));
         return new ChallengeRound("MRG", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("MRG_R1_01",

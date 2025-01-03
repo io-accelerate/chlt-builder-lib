@@ -2,7 +2,7 @@ package io.accelerate.challenge.checks.defined;
 
 import io.accelerate.challenge.checks.ChallengeChecks;
 import io.accelerate.challenge.definition.schema.*;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -35,9 +35,9 @@ class ChallengeIdDefTest {
 
         MethodDefinition methodDefinition = new MethodDefinition(
                 "CNC",
-                List.of(new ParamDefinition("desc1", PrimitiveTypes.STRING),
-                        new ParamDefinition("desc2", PrimitiveTypes.STRING)),
-                new ReturnDefinition("desc3", PrimitiveTypes.STRING));
+                List.of(new ParamDefinition("desc1", PrimitiveType.STRING),
+                        new ParamDefinition("desc2", PrimitiveType.STRING)),
+                new ReturnDefinition("desc3", PrimitiveType.STRING));
         ChallengeRound round = new ChallengeRound("R", "desc",
                 MethodDefinitions.of(methodDefinition),
                 tests);

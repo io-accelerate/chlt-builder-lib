@@ -4,7 +4,7 @@ import io.accelerate.challenge.checks.RoundChecks;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
-import io.accelerate.challenge.definition.schema.types.PrimitiveTypes;
+import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -29,7 +29,7 @@ class NullSolveTest {
 
     private static ChallengeRound fetchWithNullChallenge(List<?> args, boolean isNull) {
         MethodDefinition methodDefinition = new MethodDefinition("check",
-                List.of(), new ReturnDefinition("desc1", PrimitiveTypes.STRING));
+                List.of(), new ReturnDefinition("desc1", PrimitiveType.STRING));
         return new ChallengeRound("PNG", "desc",
                 MethodDefinitions.of(methodDefinition),
                 List.of(new RoundTest("PNG_R1_01",
