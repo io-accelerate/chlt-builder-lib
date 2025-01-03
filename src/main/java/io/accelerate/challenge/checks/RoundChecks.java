@@ -12,6 +12,7 @@ import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public final class RoundChecks {
 
@@ -100,7 +101,8 @@ public final class RoundChecks {
         String roundName = challengeRound.getClass().getSimpleName();
         System.out.printf("~~~~~~~ Read description %s ~~~~~~~%n", roundName);
         String description = challengeRound.getDescription();
-        System.out.print(description);
+        System.out.println(description);
+        System.out.println(renderMethodsDocumentation(challengeRound.getMethods()));
         referenceSolution.participantReceivesRoundDescription(description);
 
         System.out.printf("~~~~~~~ Solve round  %s ~~~~~~~%n", challengeRound.getClass().getSimpleName());
@@ -138,6 +140,37 @@ public final class RoundChecks {
             failedLines.forEach(System.out::println);
             throw new AssertionError("The implementation has failed one or more trials. Please check above.");
         }
+    }
+    
+    // ~~~~~~ Utility methods ~~~~~~
+
+    private static String renderMethodsDocumentation(MethodDefinitions methodDefinitions) {
+        StringBuilder sb = new StringBuilder();
+        String maybePluralSuffix = methodDefinitions.size() > 1 ? "s" : "";
+        sb.append("In order to complete the round you need to implement the following method").append(maybePluralSuffix).append(":").append("\n\n");
+        String methods = methodDefinitions.stream().map(RoundChecks::renderMethodDocumentation).collect(Collectors.joining("\n\n"));
+        sb.append(methods);
+        return sb.toString();
+    }
+
+    //OBS: The meaning of the various parameters could be part of the method definition
+    public static String renderMethodDocumentation(MethodDefinition method) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(renderMethodDefinition(method)).append("\n");
+        for (int i = 0; i < method.parameterDefinitions().size(); i++) {
+            ParamDefinition paramDefinition = method.parameterDefinitions().get(i);
+            sb.append(" - param[").append(i).append("] = ").append(paramDefinition.description()).append("\n");
+        }
+        sb.append(" - @return = ").append(method.returnDefinition().description());
+        return sb.toString();
+    }
+
+    private static String renderMethodDefinition(MethodDefinition method) {
+        String parameters = method.parameterDefinitions().stream()
+                .map(ParamDefinition::typeDefinition)
+                .map(TypeDefinition::getDisplayName)
+                .collect(Collectors.joining(", "));
+        return method.name() + "(" + parameters + ") -> " + method.returnDefinition().typeDefinition().getDisplayName();
     }
 
     private static JsonNode asJsonNode(Object value) {
