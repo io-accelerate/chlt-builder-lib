@@ -26,6 +26,7 @@ dependencies {
 
     // Challenge definition
     implementation 'io.accelerate:chlt-schema-lib:0.2.1' // This references com.fasterxml.jackson.core as well
+    implementation 'io.accelerate:chlt-reference-client-lib:0.1.0' // This references com.fasterxml.jackson.core as well
 
     // Testing framework
     testImplementation platform('org.junit:junit-bom:5.10.0')

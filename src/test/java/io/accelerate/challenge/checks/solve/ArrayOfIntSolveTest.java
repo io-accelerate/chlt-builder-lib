@@ -1,7 +1,6 @@
 package io.accelerate.challenge.checks.solve;
 
 import io.accelerate.challenge.checks.RoundChecks;
-import io.accelerate.challenge.client.ArrayOfIntegers;
 import io.accelerate.challenge.client.ImplementationMap;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.definition.schema.*;
@@ -9,6 +8,7 @@ import io.accelerate.challenge.definition.schema.types.ListType;
 import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,8 +18,8 @@ class ArrayOfIntSolveTest {
     @Test
     void shouldPassIfRoundCanBeSolved() {
         ChallengeRound challengeRound = mergeChallenge(
-                List.of(ArrayOfIntegers.of(1, 2), ArrayOfIntegers.of(3, 4)),
-                ArrayOfIntegers.of(1, 2, 3, 4));
+                List.of(List.of(1, 2), List.of(3, 4)),
+                List.of(1, 2, 3, 4));
 
         RoundChecks.assertRoundCanBeSolvedWith(getMergeReferenceSolution(), challengeRound);
     }
@@ -27,8 +27,8 @@ class ArrayOfIntSolveTest {
     @Test
     void shouldErrorRoundDoesNotSolveCorrectly() {
         ChallengeRound challengeRound = mergeChallenge(
-                List.of(ArrayOfIntegers.of(1, 2), ArrayOfIntegers.of(3, 4)),
-                ArrayOfIntegers.of(1, 2));
+                List.of(List.of(1, 2), List.of(3, 4)),
+                List.of(1, 2));
 
         assertThrows(AssertionError.class, () -> RoundChecks.assertRoundCanBeSolvedWith(getMergeReferenceSolution(), challengeRound));
     }
@@ -60,9 +60,9 @@ class ArrayOfIntSolveTest {
             public ImplementationMap participantUpdatesImplementationMap() {
                 ImplementationMap implementationMap = new ImplementationMap();
                 implementationMap.register("merge", params -> {
-                            ArrayOfIntegers integers = new ArrayOfIntegers();
-                            integers.addAll(params[0].getAsArrayOfIntegers());
-                            integers.addAll(params[1].getAsArrayOfIntegers());
+                            List<Integer> integers = new ArrayList<>();
+                            integers.addAll(params[0].getAsListOf(Integer.class));
+                            integers.addAll(params[1].getAsListOf(Integer.class));
                             return integers;
                         }
                 );

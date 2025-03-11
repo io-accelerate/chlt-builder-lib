@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.accelerate.challenge.client.ReferenceClient;
 import io.accelerate.challenge.client.ReferenceSolution;
-import io.accelerate.challenge.client.Request;
-import io.accelerate.challenge.client.Response;
+import io.accelerate.challenge.client.RequestFromServer;
+import io.accelerate.challenge.client.ResponseToServer;
 import io.accelerate.challenge.definition.schema.*;
 import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 
@@ -108,8 +108,8 @@ public final class RoundChecks {
         System.out.printf("~~~~~~~ Solve round  %s ~~~~~~~%n", challengeRound.getClass().getSimpleName());
         for (RoundTest roundTest : roundTests) {
             MethodCall methodCall = roundTest.methodCall();
-            Request request = new Request(roundTest.id(), methodCall);
-            Response response = referenceClient.respondToRequest(request, referenceSolution);
+            RequestFromServer request = new RequestFromServer(roundTest.id(), methodCall.methodName(), methodCall.args());
+            ResponseToServer response = referenceClient.respondToRequest(request, referenceSolution);
 
             RoundTestAssertion roundTestAssertion = roundTest.roundTestAssertion();
             String auditTrial = formatAuditLine(request, roundTestAssertion, response);
@@ -178,12 +178,11 @@ public final class RoundChecks {
         return objectMapper.valueToTree(value);
     }
 
-    private static String formatAuditLine(Request request, RoundTestAssertion roundTestAssertion, Response response) {
-        MethodCall methodCall = request.methodCall();
+    private static String formatAuditLine(RequestFromServer request, RoundTestAssertion roundTestAssertion, ResponseToServer response) {
 
         // Stringify params
         StringBuilder sb = new StringBuilder();
-        for (Object param : methodCall.args()) {
+        for (Object param : request.args()) {
             String paramRepresentation = param.toString().replaceAll("\n","\n\\\\ ");
             if (!sb.isEmpty()) {
                 sb.append(", ");
@@ -197,6 +196,6 @@ public final class RoundChecks {
         String paramsString = sb.toString();
 
         return String.format("%s(%s), expected: %s %s, got: %s",
-                methodCall.methodName(), paramsString, roundTestAssertion.type().toDisplayName(), roundTestAssertion.value(), response.value());
+                request.methodName(), paramsString, roundTestAssertion.type().toDisplayName(), roundTestAssertion.value(), response.value());
     }
 }
