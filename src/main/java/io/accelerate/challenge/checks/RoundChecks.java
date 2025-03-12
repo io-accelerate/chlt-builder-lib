@@ -12,6 +12,7 @@ import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class RoundChecks {
@@ -94,10 +95,6 @@ public final class RoundChecks {
         ReferenceClient referenceClient = new ReferenceClient();
         List<RoundTest> roundTests = challengeRound.getTests();
 
-        //Debt: We should provide an execution report
-        boolean allTrialsPassed = true;
-        List<String> failedLines = new ArrayList<>();
-
         String roundName = challengeRound.getClass().getSimpleName();
         System.out.printf("~~~~~~~ Read description %s ~~~~~~~%n", roundName);
         String description = challengeRound.getDescription();
@@ -106,42 +103,29 @@ public final class RoundChecks {
         referenceSolution.participantReceivesRoundDescription(description);
 
         System.out.printf("~~~~~~~ Solve round  %s ~~~~~~~%n", challengeRound.getClass().getSimpleName());
+
+        List<ResponseToServer> receivedResponses = new ArrayList<>();
         for (RoundTest roundTest : roundTests) {
             MethodCall methodCall = roundTest.methodCall();
             RequestFromServer request = new RequestFromServer(roundTest.id(), methodCall.methodName(), methodCall.args());
-            ResponseToServer response = referenceClient.respondToRequest(request, referenceSolution);
-
             RoundTestAssertion roundTestAssertion = roundTest.roundTestAssertion();
+            ResponseToServer response = referenceClient.respondToRequest(request, referenceSolution);
+            receivedResponses.add(response);
             String auditTrial = formatAuditLine(request, roundTestAssertion, response);
-
-            boolean assertionPassed = false;
-            // Compare as jsonNodes
-            JsonNode responseJsonNode = asJsonNode(response.value());
-            switch (roundTestAssertion.type()) {
-                case EQUALS -> assertionPassed = Objects.equals(asJsonNode(roundTestAssertion.value()), responseJsonNode);
-                case CONTAINS_STRING -> assertionPassed = responseJsonNode.asText().contains((String)roundTestAssertion.value());
-                case CONTAINS_STRING_IGNORING_CASE -> {
-                    String expectedContainsToLower = ((String) roundTestAssertion.value()).toLowerCase();
-                    assertionPassed = responseJsonNode.asText().toLowerCase().contains(expectedContainsToLower);
-                }
-                case IS_NULL -> assertionPassed = responseJsonNode.isNull() == ((Boolean) roundTestAssertion.value());
-            }
-
-            if (!assertionPassed){
-                allTrialsPassed = false;
-                failedLines.add(auditTrial);
-            }
-
             System.out.println(auditTrial);
         }
 
-        if (!allTrialsPassed) {
+        RoundResponseChecker roundResponseChecker = new RoundResponseChecker();
+        List<FailedRoundTest> failedRoundTests = roundResponseChecker.checkResponses(roundTests, receivedResponses);
+        if (failedRoundTests.isEmpty()) {
+            System.out.println("~~~~~~~ Round passed ~~~~~~~");
+        } else {
             System.out.println("~~~~~~~ Failed trials ~~~~~~~");
-            failedLines.forEach(System.out::println);
+            failedRoundTests.forEach(System.out::println);
             throw new AssertionError("The implementation has failed one or more trials. Please check above.");
         }
     }
-    
+
     // ~~~~~~ Utility methods ~~~~~~
 
     private static String renderMethodsDocumentation(MethodDefinitions methodDefinitions) {
@@ -179,7 +163,6 @@ public final class RoundChecks {
     }
 
     private static String formatAuditLine(RequestFromServer request, RoundTestAssertion roundTestAssertion, ResponseToServer response) {
-
         // Stringify params
         StringBuilder sb = new StringBuilder();
         for (Object param : request.args()) {
