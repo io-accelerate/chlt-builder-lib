@@ -2,6 +2,10 @@ package io.accelerate.challenge.checks;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.accelerate.challenge.checker.round.DefaultRoundChecker;
+import io.accelerate.challenge.checker.round.FailedRoundTest;
+import io.accelerate.challenge.checker.round.RoundChecker;
+import io.accelerate.challenge.checker.round.RoundResponseToCheck;
 import io.accelerate.challenge.client.ReferenceClient;
 import io.accelerate.challenge.client.ReferenceSolution;
 import io.accelerate.challenge.client.RequestFromServer;
@@ -11,8 +15,6 @@ import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class RoundChecks {
@@ -115,8 +117,9 @@ public final class RoundChecks {
             System.out.println(auditTrial);
         }
 
-        RoundResponseChecker roundResponseChecker = new RoundResponseChecker();
-        List<FailedRoundTest> failedRoundTests = roundResponseChecker.checkResponses(roundTests, receivedResponses);
+        RoundChecker roundResponseChecker = new DefaultRoundChecker();
+        List<RoundResponseToCheck> responsesToCheck = receivedResponses.stream().map(response -> new RoundResponseToCheck(response.requestId(), response.value())).toList();
+        List<FailedRoundTest> failedRoundTests = roundResponseChecker.checkResponses(roundTests, responsesToCheck);
         if (failedRoundTests.isEmpty()) {
             System.out.println("~~~~~~~ Round passed ~~~~~~~");
         } else {
