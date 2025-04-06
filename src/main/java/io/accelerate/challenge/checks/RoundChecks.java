@@ -15,6 +15,7 @@ import io.accelerate.challenge.definition.schema.types.PrimitiveType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class RoundChecks {
 
@@ -163,7 +164,7 @@ public final class RoundChecks {
         String paramsString = sb.toString();
 
         String expected = roundTestAssertion.value().toString();
-        String actual = response.value().toString();
+        String actual = Optional.ofNullable(response.value()).orElse("null").toString();
         return String.format("%s(%s), expected: %s %s, got: %s",
                 request.methodName(), paramsString, roundTestAssertion.type().toDisplayName(), serialiseNewlines(expected), serialiseNewlines(actual));
     }
