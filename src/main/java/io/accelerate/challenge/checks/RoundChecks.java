@@ -124,8 +124,18 @@ public final class RoundChecks {
             System.out.println("~~~~~~~ Round passed ~~~~~~~");
         } else {
             System.out.println("~~~~~~~ Failed trials ~~~~~~~");
-            failedRoundTests.forEach(System.out::println);
+            failedRoundTests.forEach(RoundChecks::printFailedRoundTest);
             throw new AssertionError("The implementation has failed one or more trials. Please check above.");
+        }
+    }
+
+    private static void printFailedRoundTest(FailedRoundTest failedRoundTest) {
+        RoundTestAssertionType type = failedRoundTest.failedAssertion().type();
+        if (type == RoundTestAssertionType.MULTILINE_STRING_EQUALS) {
+            System.out.println("> requestId: " + failedRoundTest.requestId() + ", assertionType: " + type);
+            System.out.println("> expected:\n"+failedRoundTest.failedAssertion().value());
+            System.out.println("> actual:\n"+failedRoundTest.actualValue());
+            System.out.println("------");
         }
     }
 
@@ -140,7 +150,7 @@ public final class RoundChecks {
         // Stringify params
         StringBuilder sb = new StringBuilder();
         for (Object param : request.args()) {
-            String paramRepresentation = param.toString().replaceAll("\n","\n\\\\ ");
+            String paramRepresentation = serialiseNewlines(param.toString());
             if (!sb.isEmpty()) {
                 sb.append(", ");
             }
@@ -152,7 +162,13 @@ public final class RoundChecks {
         }
         String paramsString = sb.toString();
 
+        String expected = roundTestAssertion.value().toString();
+        String actual = response.value().toString();
         return String.format("%s(%s), expected: %s %s, got: %s",
-                request.methodName(), paramsString, roundTestAssertion.type().toDisplayName(), roundTestAssertion.value(), response.value());
+                request.methodName(), paramsString, roundTestAssertion.type().toDisplayName(), serialiseNewlines(expected), serialiseNewlines(actual));
+    }
+
+    private static String serialiseNewlines(String text) {
+        return text.replaceAll("\n", "\\\\n");
     }
 }
