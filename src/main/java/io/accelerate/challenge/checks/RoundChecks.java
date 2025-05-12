@@ -165,8 +165,8 @@ public final class RoundChecks {
 
         String expected = roundTestAssertion.value().toString();
         String actual = Optional.ofNullable(response.value()).orElse("null").toString();
-        return String.format("%s(%s), expected: %s %s, got: %s",
-                request.methodName(), paramsString, roundTestAssertion.type().toDisplayName(), serialiseNewlines(expected), serialiseNewlines(actual));
+        return String.format("%s, %s(%s), expected: %s %s, got: %s",
+                request.requestId(), request.methodName(), paramsString, roundTestAssertion.type().toDisplayName(), serialiseNewlines(expected), serialiseNewlines(actual));
     }
 
     private static String serialiseNewlines(String text) {
